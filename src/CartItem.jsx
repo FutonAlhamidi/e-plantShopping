@@ -9,27 +9,46 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
- 
+    return cart.reduce((total, item) => {
+        return total + (item.cost * item.quantity);
+      }, 0);
   };
+  
 
-  const handleContinueShopping = (e) => {
-   
-  };
-
+  
 
 
+  // دالة لزيادة الكمية
   const handleIncrement = (item) => {
+    // زيادة الكمية بواحد
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
+  // دالة لتقليل الكمية
   const handleDecrement = (item) => {
-   
+    if (item.quantity > 1) {
+      // إذا كانت الكمية أكبر من 1، نخفضها بمقدار 1
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } else {
+      // إذا كانت الكمية تساوي 1، نقوم بإزالة العنصر من السلة
+      dispatch(removeItem(item));
+    }
   };
 
+  // إزالة العنصر من السلة
   const handleRemove = (item) => {
+    dispatch(removeItem(item));
   };
 
-  // Calculate total cost based on quantity for an item
+  // حساب التكلفة الإجمالية للعنصر بناءً على الكمية
   const calculateTotalCost = (item) => {
+    return item.cost * item.quantity; // ضرب الكمية في تكلفة الوحدة
+  };
+
+  // الدالة التي يتم استدعاؤها للعودة إلى صفحة التسوق
+  const handleContinueShopping = (e) => {
+    e.preventDefault();
+    onContinueShopping();  // استدعاء الدالة المرسلة من المكون الأب
   };
 
   return (
